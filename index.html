@@ -401,6 +401,8 @@
             gap: 8px;
             flex-shrink: 0;
             min-height: 60px;
+            width: 100%;
+            max-width: 510px;
         }
 
         .input-wrapper {
@@ -865,6 +867,243 @@
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
+/* ===== ATTACHMENT PANEL ===== */
+.attach-panel {
+  position: absolute;
+  bottom: 68px;
+  left: 10px;
+  right: 10px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1);
+  padding: 16px;
+  z-index: 50;
+  animation: attachSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes attachSlide {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.attach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.attach-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.attach-item:active { transform: scale(0.92); }
+
+.attach-icon-bg {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.attach-icon-bg svg { width: 26px; height: 26px; }
+
+.attach-item span {
+  font-size: 12px;
+  color: var(--wa-text-secondary);
+  font-weight: 500;
+}
+
+/* ===== VOICE RECORDING OVERLAY ===== */
+.voice-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 20, 26, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.voice-wave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 60px;
+}
+
+.voice-wave span {
+  display: block;
+  width: 4px;
+  background: var(--wa-teal);
+  border-radius: 2px;
+  animation: voiceWave 0.5s ease-in-out infinite alternate;
+}
+
+.voice-wave span:nth-child(1) { height: 20px; animation-delay: 0s; }
+.voice-wave span:nth-child(2) { height: 35px; animation-delay: 0.1s; }
+.voice-wave span:nth-child(3) { height: 50px; animation-delay: 0.2s; }
+.voice-wave span:nth-child(4) { height: 40px; animation-delay: 0.15s; }
+.voice-wave span:nth-child(5) { height: 25px; animation-delay: 0.05s; }
+.voice-wave span:nth-child(6) { height: 45px; animation-delay: 0.25s; }
+.voice-wave span:nth-child(7) { height: 30px; animation-delay: 0.1s; }
+.voice-wave span:nth-child(8) { height: 55px; animation-delay: 0.3s; }
+.voice-wave span:nth-child(9) { height: 35px; animation-delay: 0.2s; }
+.voice-wave span:nth-child(10) { height: 20px; animation-delay: 0.05s; }
+
+@keyframes voiceWave {
+  from { transform: scaleY(0.3); opacity: 0.5; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+.voice-timer {
+  font-size: 48px;
+  font-weight: 300;
+  color: white;
+  font-variant-numeric: tabular-nums;
+}
+
+.voice-hint {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+.voice-stop {
+  width: 64px;
+  height: 64px;
+  background: #ea4335;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(234,67,53,0.4);
+  transition: transform 0.2s;
+}
+
+.voice-stop:active { transform: scale(0.9); }
+.voice-stop svg { width: 24px; height: 24px; }
+
+/* ===== CONTEXT RESET TOAST ===== */
+.context-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(31, 44, 52, 0.95);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+
+/* ===== MEDIA BUBBLES ===== */
+.bubble-image {
+  max-width: 240px;
+  border-radius: 6px;
+  display: block;
+  cursor: pointer;
+}
+
+.bubble-video {
+  max-width: 240px;
+  border-radius: 6px;
+  display: block;
+}
+
+.bubble-audio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.audio-play-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--wa-teal);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.audio-waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  flex: 1;
+}
+
+.audio-waveform span {
+  display: block;
+  width: 3px;
+  background: var(--wa-teal);
+  border-radius: 1.5px;
+  opacity: 0.6;
+}
+
+.bubble-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--wa-teal);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  font-size: 11px;
+  color: var(--wa-meta);
+  margin-top: 2px;
+}
+        
     </style>
 <base target="_blank">
 </head>
@@ -874,22 +1113,28 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Dropdown Menu (muncul di bawah icon titik 3) -->
-    <div class="wa-dropdown hidden" id="wa-dropdown">
-        <div class="wa-dropdown-item" onclick="openSettings()">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.27.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-            </svg>
-            <span>Pengaturan</span>
-        </div>
-        <div class="wa-dropdown-divider"></div>
-        <div class="wa-dropdown-item" onclick="clearChat()">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-            </svg>
-            <span>Hapus Chat</span>
-        </div>
-    </div>
-
+<div class="wa-dropdown hidden" id="wa-dropdown">
+  <div class="wa-dropdown-item" onclick="openSettings()">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.27.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+    </svg>
+    <span>Pengaturan</span>
+  </div>
+  <div class="wa-dropdown-item" onclick="resetContext()">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+    </svg>
+    <span>Reset Konteks</span>
+  </div>
+  <div class="wa-dropdown-divider"></div>
+  <div class="wa-dropdown-item" onclick="clearChat()">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+    </svg>
+    <span>Hapus Chat</span>
+  </div>
+</div>
+    
     <!-- Settings Panel (slide-in dari kanan) -->
     <div class="settings-panel hidden" id="settings-panel">
         <div class="settings-header">
@@ -1019,6 +1264,59 @@
                 <svg id="icon-send" class="hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
         </footer>
+        
+<!-- Attachment Panel (floating di atas input) -->
+<div class="attach-panel hidden" id="attach-panel">
+  <div class="attach-grid">
+    <div class="attach-item" onclick="triggerFileInput('image/*')">
+      <div class="attach-icon-bg" style="background:#007bfc"><svg viewBox="0 0 24 24" fill="white"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>
+      <span>Foto</span>
+    </div>
+    <div class="attach-item" onclick="triggerFileInput('video/*')">
+      <div class="attach-icon-bg" style="background:#bf59cf"><svg viewBox="0 0 24 24" fill="white"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg></div>
+      <span>Video</span>
+    </div>
+    <div class="attach-item" onclick="triggerFileInput('audio/*')">
+      <div class="attach-icon-bg" style="background:#fa9e2c"><svg viewBox="0 0 24 24" fill="white"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg></div>
+      <span>Audio</span>
+    </div>
+    <div class="attach-item" onclick="triggerFileInput('*/*')">
+      <div class="attach-icon-bg" style="background:#0aa545"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+      <span>Dokumen</span>
+    </div>
+    <div class="attach-item" onclick="startVoiceRecording()">
+      <div class="attach-icon-bg" style="background:#ea4335"><svg viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></div>
+      <span>Voice</span>
+    </div>
+    <div class="attach-item" onclick="triggerCamera()">
+      <div class="attach-icon-bg" style="background:#607d8b"><svg viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.5 7.5 0 0 0-1.59-.92l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.38 2.65a7.5 7.5 0 0 0-1.59.92l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46c-.13.22-.07.5.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .61.22l2.49-1.01c.46.37.98.68 1.59.92l.38 2.65c.04.24.26.42.5.42h4c.24 0 .46-.18.5-.42l.38-2.65a7.5 7.5 0 0 0 1.59-.92l2.49 1.01a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64z"/></svg></div>
+      <span>Kamera</span>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file inputs -->
+<input type="file" id="file-input" accept="*/*" hidden onchange="handleFileSelect(this)">
+<input type="file" id="camera-input" accept="image/*" capture="environment" hidden onchange="handleFileSelect(this)">
+
+<!-- Voice Recording Overlay -->
+<div class="voice-overlay hidden" id="voice-overlay">
+  <div class="voice-wave">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="voice-timer" id="voice-timer">0:00</div>
+  <div class="voice-hint">Geser ke kiri untuk membatalkan</div>
+  <button class="voice-stop" onclick="stopVoiceRecording()">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg>
+  </button>
+</div>
+
+<!-- Context Reset Toast -->
+<div class="context-toast hidden" id="context-toast">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+  <span>Konteks direset. Pesan berikutnya = pesan pertama.</span>
+</div>
     </div>
 
     <script>
@@ -1731,6 +2029,316 @@
             toast('Chat dihapus');
         }
     }
+
+// ================= ATTACHMENT & MEDIA =================
+let attachPanelOpen = false;
+
+function toggleAttachPanel() {
+  const panel = document.getElementById('attach-panel');
+  attachPanelOpen = !attachPanelOpen;
+  if (attachPanelOpen) {
+    panel.classList.remove('hidden');
+  } else {
+    panel.classList.add('hidden');
+  }
+}
+
+// Close attach panel when clicking outside
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('attach-panel');
+  const attachIcon = document.querySelector('[title="Attach"]');
+  if (attachPanelOpen && !panel.contains(e.target) && !attachIcon.contains(e.target)) {
+    panel.classList.add('hidden');
+    attachPanelOpen = false;
+  }
+});
+
+// Update attach icon click handler
+document.querySelector('[title="Attach"]').addEventListener('click', (e) => {
+  e.stopPropagation();
+  toggleAttachPanel();
+});
+
+function triggerFileInput(accept) {
+  const input = document.getElementById('file-input');
+  input.accept = accept;
+  input.click();
+  document.getElementById('attach-panel').classList.add('hidden');
+  attachPanelOpen = false;
+}
+
+function triggerCamera() {
+  document.getElementById('camera-input').click();
+  document.getElementById('attach-panel').classList.add('hidden');
+  attachPanelOpen = false;
+}
+
+async function handleFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = ''; // reset untuk bisa pilih file yang sama lagi
+  
+  // Check size (max 20MB for Gemini)
+  if (file.size > 20 * 1024 * 1024) {
+    toast('File terlalu besar (max 20MB)', 'error');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result.split(',')[1];
+    const mimeType = file.type || 'application/octet-stream';
+    
+    // Show bubble in UI
+    const now = new Date();
+    addDateSeparatorIfNeeded(now);
+    renderMediaBubble(file, base64, mimeType, 'user', now);
+    scrollToBottom(true);
+    
+    // Send to Gemini
+    showTyping();
+    try {
+      const response = await fetchGeminiWithMedia(file.name, base64, mimeType);
+      hideTyping();
+      playIncomingSound();
+      
+      const respTime = new Date();
+      addDateSeparatorIfNeeded(respTime);
+      renderBubble(response, 'ai', respTime, true, true);
+      scrollToBottom(true);
+      updateLastUserMessageToRead();
+      
+    } catch (err) {
+      hideTyping();
+      playErrorSound();
+      toast('Gagal menganalisis file: ' + err.message, 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderMediaBubble(file, base64, mimeType, sender, time) {
+  const win = document.getElementById('chat-window');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble ' + sender;
+  
+  const content = document.createElement('div');
+  content.className = 'bubble-content';
+  
+  if (mimeType.startsWith('image/')) {
+    content.innerHTML = '<img src="data:' + mimeType + ';base64,' + base64 + '" class="bubble-image" onclick="window.open(this.src)">';
+  } else if (mimeType.startsWith('video/')) {
+    content.innerHTML = '<video src="data:' + mimeType + ';base64,' + base64 + '" class="bubble-video" controls preload="metadata"></video>';
+  } else if (mimeType.startsWith('audio/')) {
+    const duration = '0:00'; // Could extract real duration
+    content.innerHTML = '<div class="bubble-audio"><div class="audio-play-btn" onclick="this.nextElementSibling.play()">▶</div><audio src="data:' + mimeType + ';base64,' + base64 + '" style="display:none"></audio><div class="audio-waveform">' + Array(20).fill(0).map(() => '<span style="height:' + (Math.random() * 16 + 4) + 'px"></span>').join('') + '</div><span style="font-size:11px;color:var(--wa-meta);">' + duration + '</span></div>';
+  } else {
+    content.innerHTML = '<div class="bubble-file"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">' + escapeHtml(file.name) + '</div><div class="file-size">' + formatFileSize(file.size) + '</div></div></div>';
+  }
+  
+  bubble.appendChild(content);
+  
+  const meta = document.createElement('div');
+  meta.className = 'bubble-meta';
+  meta.innerHTML = '<span>' + formatTime(time) + '</span>';
+  if (sender === 'user') {
+    meta.innerHTML += '<span class="checkmarks delivered"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 8.5l2.5 2.5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 8.5l2.5 2.5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  }
+  bubble.appendChild(meta);
+  
+  win.appendChild(bubble);
+  return bubble;
+}
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+// ================= VOICE RECORDING =================
+let mediaRecorder = null;
+let voiceChunks = [];
+let voiceStartTime = null;
+let voiceTimerInterval = null;
+
+async function startVoiceRecording() {
+  document.getElementById('attach-panel').classList.add('hidden');
+  attachPanelOpen = false;
+  
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    voiceChunks = [];
+    
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) voiceChunks.push(e.data);
+    };
+    
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(voiceChunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result.split(',')[1];
+        const now = new Date();
+        
+        addDateSeparatorIfNeeded(now);
+        renderMediaBubble({ name: 'Voice Note.webm', size: blob.size }, base64, 'audio/webm', 'user', now);
+        scrollToBottom(true);
+        
+        showTyping();
+        try {
+          const response = await fetchGeminiWithMedia('Voice Note.webm', base64, 'audio/webm');
+          hideTyping();
+          playIncomingSound();
+          
+          const respTime = new Date();
+          addDateSeparatorIfNeeded(respTime);
+          renderBubble(response, 'ai', respTime, true, true);
+          scrollToBottom(true);
+          updateLastUserMessageToRead();
+          
+        } catch (err) {
+          hideTyping();
+          playErrorSound();
+          toast('Gagal menganalisis voice note: ' + err.message, 'error');
+        }
+      };
+      reader.readAsDataURL(blob);
+      
+      // Stop all tracks
+      stream.getTracks().forEach(track => track.stop());
+    };
+    
+    mediaRecorder.start();
+    voiceStartTime = Date.now();
+    document.getElementById('voice-overlay').classList.remove('hidden');
+    
+    // Update timer
+    const timerEl = document.getElementById('voice-timer');
+    voiceTimerInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - voiceStartTime) / 1000);
+      const mins = Math.floor(elapsed / 60);
+      const secs = elapsed % 60;
+      timerEl.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }, 1000);
+    
+  } catch (err) {
+    toast('Tidak bisa mengakses mikrofon: ' + err.message, 'error');
+  }
+}
+
+function stopVoiceRecording() {
+  if (voiceTimerInterval) {
+    clearInterval(voiceTimerInterval);
+    voiceTimerInterval = null;
+  }
+  document.getElementById('voice-overlay').classList.add('hidden');
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+}
+
+// ================= GEMINI API WITH MEDIA =================
+async function fetchGeminiWithMedia(filename, base64Data, mimeType) {
+  const roles = {
+    coding: 'Kamu adalah senior developer, UI/UX designer, dan software architect yang kece. Ngobrol santai kayak temen tapi deep teknikal. Panggil user dengan \"' + state.callSign + '\" secara natural di awal atau akhir kalimat. Bisa bantu coding, review code, desain system, atau debug. Format kode dengan rapi.',
+    writing: 'Kamu adalah penulis kreatif dan editor profesional. Vibe-nya kayak temen ngobrol di kafe sambil ngopi, tapi skill writing-nya top tier. Panggil user dengan \"' + state.callSign + '\" secara natural. Bantu brainstorm ide, nulis copy, cerpen, script, atau editing.',
+    consultant: 'Kamu adalah konsultan produktivitas, bisnis, dan strategi kreatif. Ngobrolnya santai tapi insight-nya powerful dan actionable. Panggil user dengan \"' + state.callSign + '\" secara natural. Bantu user mikir lebih jernih dan ambil keputusan.',
+    friend: 'Kamu adalah temen ngobrol yang asik, suportif, gak judgmental, dan punya sense of humor. Panggil user dengan \"' + state.callSign + '\" secara natural di awal atau akhir kalimat. Bisa ngobrolin apa aja dari curhat sampe ngobrol random.'
+  };
+
+  const systemPrompt = roles[state.role] || roles.friend;
+
+  const contents = [];
+  
+  // Add context history (text only, for token efficiency)
+  state.messageHistory.forEach(msg => {
+    contents.push({
+      role: msg.role,
+      parts: [{ text: msg.text }]
+    });
+  });
+  
+  // Current message with media
+  const parts = [{ text: 'Saya mengirim file: ' + filename + '. Silakan analisis dan berikan respon.' }];
+  
+  // Add media if it's an image, audio, or video that Gemini supports
+  if (mimeType.startsWith('image/') || mimeType.startsWith('audio/') || mimeType.startsWith('video/')) {
+    parts.push({
+      inlineData: {
+        mimeType: mimeType,
+        data: base64Data
+      }
+    });
+  }
+  
+  contents.push({
+    role: 'user',
+    parts: parts
+  });
+
+  const payload = {
+    contents: contents,
+    systemInstruction: {
+      parts: [{ text: systemPrompt }]
+    },
+    generationConfig: {
+      temperature: 0.85,
+      topK: 40,
+      topP: 0.95,
+      maxOutputTokens: 2048
+    }
+  };
+
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + state.model + ':generateContent?key=' + state.apiKey;
+  
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'HTTP ' + res.status);
+  }
+
+  const data = await res.json();
+  
+  if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+    return data.candidates[0].content.parts[0].text;
+  }
+  
+  if (data.promptFeedback?.blockReason) {
+    throw new Error('Konten diblokir: ' + data.promptFeedback.blockReason);
+  }
+  
+  throw new Error('Respon tidak valid dari API');
+}
+
+// ================= CONTEXT RESET =================
+function resetContext() {
+  // Clear message history array (context for AI) but keep UI
+  state.messageHistory = [];
+  saveHistory();
+  
+  // Show toast
+  const toast = document.getElementById('context-toast');
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3000);
+  
+  // Optionally add a system message in UI
+  const now = new Date();
+  addDateSeparatorIfNeeded(now);
+  const bubble = renderBubble('Konteks percakapan direset. Pesan berikutnya akan dianggap sebagai pesan pertama.', 'system', now, false, true);
+  bubble.style.background = 'rgba(225, 245, 254, 0.92)';
+  bubble.style.color = '#54656f';
+  bubble.style.maxWidth = '90%';
+  scrollToBottom(true);
+}
 
     // ================= INIT =================
     (function init() {
