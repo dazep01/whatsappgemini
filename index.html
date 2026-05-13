@@ -2013,44 +2013,43 @@
     }
 
     // ================= GEMINI API =================
-    async function fetchGemini(userMsg) {
-        const roles = {
-            coding: 'Kamu adalah senior developer, UI/UX designer, dan software architect yang kece. Ngobrol santai kayak temen tapi deep teknikal. Panggil user dengan "' + state.callSign + '" secara natural di awal atau akhir kalimat. Bisa bantu coding, review code, desain system, atau debug. Format kode dengan rapi.',
-            writing: 'Kamu adalah penulis kreatif dan editor profesional. Vibe-nya kayak temen ngobrol di kafe sambil ngopi, tapi skill writing-nya top tier. Panggil user dengan "' + state.callSign + '" secara natural. Bantu brainstorm ide, nulis copy, cerpen, script, atau editing.',
-            consultant: 'Kamu adalah konsultan produktivitas, bisnis, dan strategi kreatif. Ngobrolnya santai tapi insight-nya powerful dan actionable. Panggil user dengan "' + state.callSign + '" secara natural. Bantu user mikir lebih jernih dan ambil keputusan.',
-            friend: 'Kamu adalah temen ngobrol yang asik, suportif, gak judgmental, dan punya sense of humor. Panggil user dengan "' + state.callSign + '" secara natural di awal atau akhir kalimat. Bisa ngobrolin apa aja dari curhat sampe ngobrol random.'
-        };
+async function fetchGemini(userMsg) {
+    // 1. Definisikan Persona yang Lebih Dinamis & Natural
+    const roles = {
+        coding: `Kamu adalah senior developer & software architect. Gaya bicara santai seperti teman tapi sangat ahli secara teknikal. Panggil user "${state.callSign}" secara natural (tidak setiap kalimat). Fokus pada solusi efisien dan bersih.`,
+        writing: `Kamu adalah penulis kreatif profesional. Gaya bicara hangat seperti sedang ngobrol di kafe. Panggil user "${state.callSign}" secara natural. Bantu brainstorm ide dan editing dengan kualitas tinggi.`,
+        consultant: `Kamu adalah konsultan strategi bisnis dan produktivitas. Gaya bicara lugas, cerdas, tapi tetap bersahabat. Panggil user "${state.callSign}" untuk memberikan insight yang actionable.`,
+        friend: `Kamu adalah teman ngobrol yang asik, suportif, dan punya selera humor. Panggil user "${state.callSign}" seperti sahabat karib. Jadilah pendengar yang baik dan teman diskusi yang seru.`
+    };
 
-        const systemPrompt = roles[state.role] || roles.friend;
+    const systemPrompt = (roles[state.role] || roles.friend) + 
+                         ` Selalu jawab dalam Bahasa Indonesia yang natural. Nama kamu adalah ${state.aiName}.`;
 
-        const contents = [];
+    // 2. Persiapan Riwayat Pesan (Context)
+    const contents = state.messageHistory.map(msg => ({
+        role: msg.role === 'ai' ? 'model' : 'user',
+        parts: [{ text: msg.text }]
+    }));
 
-        state.messageHistory.slice(0, -1).forEach(msg => {
-            contents.push({
-                role: msg.role,
-                parts: [{ text: msg.text }]
-            });
-        });
+    contents.push({ role: 'user', parts: [{ text: userMsg }] });
 
-        contents.push({
-            role: 'user',
-            parts: [{ text: userMsg }]
-        });
+    let fullText = '';
+    let attempts = 0;
+    const maxAttempts = 3; // Batas otomatis lanjut jika terpotong
 
+    do {
         const payload = {
             contents: contents,
-            systemInstruction: {
-                parts: [{ text: systemPrompt }]
-            },
+            systemInstruction: { parts: [{ text: systemPrompt }] },
             generationConfig: {
-                temperature: 0.85,
+                temperature: 0.8,
                 topK: 40,
                 topP: 0.95,
-                maxOutputTokens: 2048
+                maxOutputTokens: 4096 // Keseimbangan antara kecepatan & kapasitas
             }
         };
 
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + state.model + ':generateContent?key=' + state.apiKey;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:generateContent?key=${state.apiKey}`;
 
         const res = await fetch(url, {
             method: 'POST',
@@ -2060,21 +2059,49 @@
 
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            throw new Error(err.error?.message || 'HTTP ' + res.status);
+            throw new Error(err.error?.message || `Error ${res.status}`);
         }
 
         const data = await res.json();
-
-        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-            return data.candidates[0].content.parts[0].text;
-        }
-
+        
+        // Safety Check di tingkat Prompt
         if (data.promptFeedback?.blockReason) {
-            throw new Error('Konten diblokir: ' + data.promptFeedback.blockReason);
+            throw new Error(`Maaf, permintaan diblokir: ${data.promptFeedback.blockReason}`);
         }
 
-        throw new Error('Respon tidak valid dari API');
-    }
+        const candidate = data.candidates?.[0];
+        if (!candidate) throw new Error('AI tidak memberikan respon.');
+
+        const finishReason = candidate.finishReason;
+        const chunk = candidate.content?.parts?.[0]?.text || '';
+        
+        fullText += chunk;
+
+        // 3. Logika Penanganan Alasan Berhenti (Audit 2026)
+        if (finishReason === 'SAFETY') {
+            fullText += '\n\n_[Respon terhenti demi keamanan]_';
+            break;
+        } 
+        
+        if (finishReason === 'RECITATION') {
+            fullText += '\n\n_[Respon terhenti karena masalah hak cipta]_';
+            break;
+        }
+
+        // 4. Auto-Continuation jika MAX_TOKENS
+        if (finishReason === 'MAX_TOKENS' && attempts < maxAttempts) {
+            attempts++;
+            // Update konteks agar AI tahu apa yang sudah ia tulis
+            contents.push({ role: 'model', parts: [{ text: chunk }] });
+            contents.push({ role: 'user', parts: [{ text: 'Lanjutkan tepat dari kata terakhir tanpa mengulang.' }] });
+            continue; 
+        }
+
+        break; // Berhenti jika finishReason adalah 'STOP' atau lainnya
+    } while (true);
+
+    return fullText || 'Maaf, aku bingung mau jawab apa.';
+}
 
     // ================= EVENT LISTENERS =================
     const userInput = document.getElementById('user-input');
